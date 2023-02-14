@@ -45,6 +45,13 @@ impl HttpsConnector<HttpConnector> {
             .unwrap_or_else(|e| panic!("HttpsConnector::new() failure: {}", e))
     }
 
+    /// Construct HttpsConnector with custom tls_connector
+    pub fn new_with_tls_connector<T: Into<TlsConnector>>(tls: T) -> Self {
+        let mut http = HttpConnector::new();
+        http.enforce_http(false);
+        HttpsConnector::from((http, tls.into()))
+    }
+
     fn new_(tls: TlsConnector) -> Self {
         let mut http = HttpConnector::new();
         http.enforce_http(false);
